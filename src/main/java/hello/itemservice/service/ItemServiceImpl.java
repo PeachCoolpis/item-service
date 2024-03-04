@@ -3,6 +3,7 @@ package hello.itemservice.service;
 
 import hello.itemservice.entity.Item;
 import hello.itemservice.entity.ItemDTO;
+import hello.itemservice.entity.SaveItem;
 import hello.itemservice.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,8 @@ public class ItemServiceImpl implements ItemService{
     }
     
     @Override
-    public Long itemSave(Item item) {
+    public Long itemSave(SaveItem saveItem) {
+        Item item = new Item(saveItem.getItemName(), saveItem.getItemPrice(), saveItem.getQuantity());
         Item save = repository.save(item);
         return save.getId();
     }

@@ -3,10 +3,13 @@ package hello.itemservice.controller;
 
 import hello.itemservice.entity.Item;
 import hello.itemservice.entity.ItemDTO;
+import hello.itemservice.entity.SaveItem;
 import hello.itemservice.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,8 +38,20 @@ public class BasicItemController {
     }
     
     @GetMapping("/add")
-    public String add() {
+    public String addForm(Model model) {
+        model.addAttribute("item", new Item());
         return "/basic/addForm";
+    }
+    
+    @PostMapping("/add")
+    public String add(@Validated @ModelAttribute("item") SaveItem saveItem, BindingResult bindingResult) {
+        
+        if (bindingResult.hasErrors()) {
+            return "basic/addForm";
+        }
+        service.itemSave(saveItem);
+        
+        return "redirect:/basic/items";
     }
     
     @GetMapping("/{id}/edit")
