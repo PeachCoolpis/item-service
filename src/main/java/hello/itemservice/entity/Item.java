@@ -38,4 +38,10 @@ public class Item {
         this.itemPrice = itemPrice;
         this.quantity = quantity;
     }
+    
+    public void updateItem(ItemDTO itemDTO) {
+        this.itemName = itemDTO.getItemName();
+        this.itemPrice = itemDTO.getItemPrice();
+        this.quantity = itemDTO.getQuantity();
+    }
 }
