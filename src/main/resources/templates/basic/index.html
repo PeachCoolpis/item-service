@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul>
+    <li>상품 관리
+        <ul>
+            <li><a href="/basic/items">상품 관리 - 기본</a></li>
+        </ul>
+    </li>
+</ul>
+</body>
+
+
+<script>
+    // 세션에 데이터를 저장하는 함수
+    function setSessionData() {
+        sessionStorage.setItem("username", "user123");
+        alert("세션에 데이터를 저장했습니다.");
+    }
+    
+    // 세션에서 데이터를 불러오는 함수
+    function getSessionData() {
+        var username = sessionStorage.getItem("username");
+        if (username) {
+            alert("세션에서 불러온 사용자 이름: " + username);
+        } else {
+            alert("세션에 저장된 데이터가 없습니다.");
+        }
+    }
+</script>
+
+<button onclick="setSessionData()">세션 데이터 저장</button>
+<button onclick="getSessionData()">세션 데이터 불러오기</button>
+
+</html>
