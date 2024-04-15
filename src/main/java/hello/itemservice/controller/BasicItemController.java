@@ -40,7 +40,7 @@ public class BasicItemController {
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("item", new Item());
-        return "/basic/addForm";
+        return "basic/addForm";
     }
     
     @PostMapping("/add")
@@ -64,6 +64,7 @@ public class BasicItemController {
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id , @ModelAttribute("itemDto")ItemDTO itemDto ) {
         Long itemId = service.itemUpdate(id, itemDto);
+        //테스트 빌드
         return "redirect:" + String.format("/basic/items/%s", itemId);
     }
     
