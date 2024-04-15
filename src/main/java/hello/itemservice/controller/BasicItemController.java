@@ -64,7 +64,7 @@ public class BasicItemController {
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id , @ModelAttribute("itemDto")ItemDTO itemDto ) {
         Long itemId = service.itemUpdate(id, itemDto);
-        //테스트 빌드
+        //테스트 빌드 테스트
         return "redirect:" + String.format("/basic/items/%s", itemId);
     }
     
