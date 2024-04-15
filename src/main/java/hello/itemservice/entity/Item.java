@@ -13,7 +13,7 @@ import org.hibernate.annotations.Comment;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Item {
+public class Item extends BaseEntity{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
