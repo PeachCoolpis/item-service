@@ -1,6 +1,7 @@
 package hello.itemservice.entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -19,9 +20,11 @@ public class BaseEntity {
     
     @CreatedDate
     @Comment("생성 일시")
+    @Column(name = "CREATE_AT")
     private LocalDateTime createAt;
     
     @LastModifiedDate
     @Comment("수정 일시")
+    @Column(name = "UPDATE_AT")
     private LocalDateTime updatedDate;
 }
