@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     
     @GetMapping("/")
-    public String home(HttpSession session) {
-     
-        session.setAttribute("username", "user123");
+    public String home() {
+        
         return "basic/index";
     }
     

@@ -5,6 +5,7 @@ import hello.itemservice.entity.Item;
 import hello.itemservice.entity.ItemDTO;
 import hello.itemservice.entity.SaveItem;
 import hello.itemservice.service.ItemService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,8 @@ public class BasicItemController {
     
     
     @GetMapping
-    public String index(Model model) {
+    public String index(Model model , HttpSession session) {
+        session.setAttribute("user","user");
         List<Item> items = service.findAll();
         model.addAttribute("items", items);
         return "basic/items";
