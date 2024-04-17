@@ -39,6 +39,7 @@ public class Item extends BaseEntity{
         this.quantity = quantity;
     }
     
+    
     public void updateItem(ItemDTO itemDTO) {
         this.itemName = itemDTO.getItemName();
         this.itemPrice = itemDTO.getItemPrice();
