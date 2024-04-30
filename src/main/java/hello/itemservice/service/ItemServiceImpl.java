@@ -1,14 +1,20 @@
 package hello.itemservice.service;
 
 
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.sql.SQLExpressions;
 import hello.itemservice.entity.Item;
 import hello.itemservice.entity.ItemDTO;
+
+import hello.itemservice.entity.QItem;
 import hello.itemservice.entity.SaveItem;
 import hello.itemservice.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,7 +23,7 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService{
 
     private final ItemRepository repository;
-    
+    private final JPAQueryFactory queryDsl;
     
     @Override
     public List<Item> findAll() {
