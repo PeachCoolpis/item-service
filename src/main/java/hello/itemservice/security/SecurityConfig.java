@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,13 +27,14 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.awt.desktop.PrintFilesEvent;
 import java.io.IOException;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
     
-    
+    private final String[] resourceLocation = {"/css/**", "/images/**", "/js/**", "/webjars/**", "/*/icon-*"};
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,22 +45,25 @@ public class SecurityConfig {
         
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(resourceLocation).permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .defaultSuccessUrl("/",true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout","POST"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                         .permitAll()
                 )
                 .authenticationManager(authenticationManager)
                 .csrf(AbstractHttpConfigurer::disable);
-      
+        
         return http.build();
     }
+    
     @Bean
     public UserDetailsService users() {
         UserDetails user1 = User.builder()
