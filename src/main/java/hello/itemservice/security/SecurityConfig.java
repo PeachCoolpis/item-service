@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -47,7 +49,6 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(resourceLocation).permitAll()
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -56,8 +57,14 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
+                        .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/"))
                         .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::changeSessionId)
+                        .maximumSessions(10)
+                        .maxSessionsPreventsLogin(false)
                 )
                 .authenticationManager(authenticationManager)
                 .csrf(AbstractHttpConfigurer::disable);
@@ -66,12 +73,22 @@ public class SecurityConfig {
     }
     
     @Bean
-    public UserDetailsService users() {
-        UserDetails user1 = User.builder()
-                .username("user")
-                .password("{noop}1234")
-                .build();
-        return new InMemoryUserDetailsManager(user1);
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String role1 = "ROLE_ADMIN > ROLE_USER\n";
+        String role2 = "ROLE_USER > ROLE_ANONYMOUS";
+        String role = role1 + role2;
+        roleHierarchy.setHierarchy(role);
+        return roleHierarchy;
     }
+    
+//    @Bean
+//    public UserDetailsService users() {
+//        UserDetails user1 = User.builder()
+//                .username("user")
+//                .password("{noop}1234")
+//                .build();
+//        return new InMemoryUserDetailsManager(user1);
+//    }
     
 }

@@ -1,33 +1,44 @@
 package hello.itemservice.controller;
 
 
-import hello.itemservice.entity.Item;
-import hello.itemservice.entity.ItemDTO;
-import hello.itemservice.entity.SaveItem;
+import hello.itemservice.entity.*;
 import hello.itemservice.service.ItemService;
-import jakarta.servlet.http.HttpSession;
+import hello.itemservice.service.PaginationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/basic/items")
+@Slf4j
 public class BasicItemController {
     
     private final ItemService service;
+    private final PaginationService paginationService;
     
     
     @GetMapping
-    public String index(Model model , HttpSession session) {
-        session.setAttribute("user","user");
-        List<Item> items = service.findAll();
-        model.addAttribute("items", items);
+    public String index(Model model,
+                        @PageableDefault(page = 0, size = 2) Pageable page) {
+        Page<Item> items = service.findAll(page);
+        PageDto pagedto = paginationService.createPageDto(items);
+        model.addAttribute("items", items.getContent());
+        model.addAttribute("pageIndices", IntStream.range(pagedto.getStartPage(), pagedto.getEndPage())
+                .boxed()
+                .collect(Collectors.toList()));
+        model.addAttribute("currentPage", pagedto.getCurrentPage());
+        model.addAttribute("totalPages", pagedto.getTotalPages());
         return "basic/items";
     }
     
@@ -56,14 +67,14 @@ public class BasicItemController {
     }
     
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id , Model model) {
+    public String editForm(@PathVariable Long id, Model model) {
         Item item = service.findItem(id);
         model.addAttribute("item", item);
         return "basic/editForm";
     }
     
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Long id , @ModelAttribute("itemDto")ItemDTO itemDto ) {
+    public String edit(@PathVariable Long id, @ModelAttribute("itemDto") ItemDTO itemDto) {
         Long itemId = service.itemUpdate(id, itemDto);
         //테스트 빌드 테스트
         return "redirect:" + String.format("/basic/items/%s", itemId);

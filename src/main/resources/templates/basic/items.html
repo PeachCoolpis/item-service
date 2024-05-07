@@ -14,11 +14,12 @@
             <button class="btn btn-primary float-end"
                     onclick="location.href='addForm.html'"
                     th:onclick="|location.href='@{/basic/items/add}'|"
-                    type="button">상품 등록</button>
+                    type="button">상품 등록
+            </button>
         </div>
     </div>
     <hr class="my-4">
-    <div >
+    <div>
         <table class="table">
             <thead>
             <tr>
@@ -37,6 +38,23 @@
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li th:class="${currentPage <= 0 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{/basic/items(page=${currentPage -1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageInfo : ${pageIndices}" th:class="${pageInfo == currentPage ? 'page-item active' : 'page-item'}">
+                    <a th:href="@{/basic/items(page=${pageInfo })}" th:text="${pageInfo + 1}" class="page-link"></a>
+                </li>
+                <li th:class="${currentPage + 1 >= totalPages ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{/basic/items(page=${currentPage +1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div> <!-- /container -->
 </body>

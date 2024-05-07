@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public class BaseDate extends BaseUser{
 
     
     @CreatedDate
@@ -27,4 +27,6 @@ public class BaseEntity {
     @Comment("수정 일시")
     @Column(name = "UPDATE_AT")
     private LocalDateTime updatedDate;
+    
+
 }

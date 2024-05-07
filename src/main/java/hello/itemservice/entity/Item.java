@@ -13,7 +13,7 @@ import org.hibernate.annotations.Comment;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Item extends BaseEntity{
+public class Item extends BaseDate {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,8 @@ public class Item extends BaseEntity{
     @Column(name = "QUANTITY")
     @Comment("상품 수량")
     private Integer quantity;
+    
+
     
     public Item(String itemName, int itemPrice, int quantity) {
         this.itemName = itemName;
