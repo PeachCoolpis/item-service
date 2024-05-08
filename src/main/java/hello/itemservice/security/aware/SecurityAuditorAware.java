@@ -1,4 +1,4 @@
-package hello.itemservice.security;
+package hello.itemservice.security.aware;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

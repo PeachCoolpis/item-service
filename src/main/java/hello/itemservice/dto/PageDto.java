@@ -1,9 +1,8 @@
-package hello.itemservice.entity;
+package hello.itemservice.dto;
 
 
 import lombok.Getter;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 
 @Getter
 public class PageDto {

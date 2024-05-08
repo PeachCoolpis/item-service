@@ -1,5 +1,6 @@
 package hello.itemservice.entity;
 
+import hello.itemservice.dto.ItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,7 @@ public class Item extends BaseDate {
     }
     
     
-    public void updateItem(ItemDTO itemDTO) {
+    public void updateItem(ItemDto itemDTO) {
         this.itemName = itemDTO.getItemName();
         this.itemPrice = itemDTO.getItemPrice();
         this.quantity = itemDTO.getQuantity();

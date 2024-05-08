@@ -1,4 +1,4 @@
-package hello.itemservice.security;
+package hello.itemservice.security.config;
 
 
 import jakarta.servlet.ServletException;
@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -35,39 +36,40 @@ import java.io.IOException;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
     
-    private final String[] resourceLocation = {"/css/**", "/images/**", "/js/**", "/webjars/**", "/*/icon-*"};
-    
+    private String[] resourceLocation = {"/css/**", "/images/**", "/js/**", "/webjars/**", "/*/icon-*"};
+    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         
-        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        AuthenticationManager authenticationManager = builder.build();
         
         
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(resourceLocation).permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/","/signup","/login*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
+                        .loginPage("/login").permitAll()
+                        .successHandler(authenticationSuccessHandler)
+                        .failureHandler(authenticationFailureHandler)
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
-                        .logoutSuccessHandler((request, response, authentication) -> response.sendRedirect("/"))
-                        .permitAll()
+                        .logoutUrl("/logout").permitAll()
                 )
+                .authenticationProvider(authenticationProvider)
                 .sessionManagement(session -> session
                         .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::changeSessionId)
                         .maximumSessions(10)
                         .maxSessionsPreventsLogin(false)
                 )
-                .authenticationManager(authenticationManager)
-                .csrf(AbstractHttpConfigurer::disable);
+                
+                ;
         
         return http.build();
     }
@@ -81,14 +83,5 @@ public class SecurityConfig {
         roleHierarchy.setHierarchy(role);
         return roleHierarchy;
     }
-    
-//    @Bean
-//    public UserDetailsService users() {
-//        UserDetails user1 = User.builder()
-//                .username("user")
-//                .password("{noop}1234")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1);
-//    }
     
 }

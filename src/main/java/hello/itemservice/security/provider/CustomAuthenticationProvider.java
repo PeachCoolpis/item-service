@@ -1,5 +1,6 @@
-package hello.itemservice.security;
+package hello.itemservice.security.provider;
 
+import hello.itemservice.security.details.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 
-@Component
+@Component(value = "authenticationProvider")
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     
@@ -31,18 +32,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //회원 검증
         String loginId = authentication.getName();
         String loginPassword = (String) authentication.getCredentials();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
-        if (userDetails == null) {
-            throw new UsernameNotFoundException("회원 없음");
-        }
+        MemberDetails memberDetails = (MemberDetails) userDetailsService.loadUserByUsername(loginId);
         
+        String password = memberDetails.getPassword();
         //비밀 번호 검증
-        String password = userDetails.getPassword();
-        if (!loginPassword.equals(password)) {
+        if (!passwordEncoder.matches(loginPassword, password)) {
             throw new BadCredentialsException("비밀번호 틀림");
         }
         
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(memberDetails.getMemberDto(), null, memberDetails.getAuthorities());
     }
     
     @Override

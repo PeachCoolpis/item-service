@@ -11,6 +11,7 @@
             <li><a  th:href="@{/basic/items}" href="/basic/items">상품 관리 - 기본</a></li>
             <li sec:authorize="isAnonymous()"><a  th:href="@{/login}" href="/login">로그인 하기</a></li>
             <li sec:authorize="isAuthenticated()"><a  th:href="@{/logout}" href="/login">로그 아웃</a></li>
+            <li sec:authorize="isAnonymous()"><a th:href="@{/signup}">회원 가입</a></li>
         </ul>
     </li>
 </ul>

@@ -1,12 +1,10 @@
 package hello.itemservice.service;
 
 import hello.itemservice.entity.Item;
-import hello.itemservice.entity.ItemDTO;
+import hello.itemservice.dto.ItemDto;
 import hello.itemservice.entity.SaveItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface ItemService {
     
@@ -16,5 +14,5 @@ public interface ItemService {
     
     Long itemSave(SaveItem saveItem);
     
-    Long itemUpdate(Long id, ItemDTO ItemDTO);
+    Long itemUpdate(Long id, ItemDto ItemDTO);
 }

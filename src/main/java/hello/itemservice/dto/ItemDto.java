@@ -1,10 +1,10 @@
-package hello.itemservice.entity;
+package hello.itemservice.dto;
 
 
 import lombok.Data;
 
 @Data
-public class ItemDTO {
+public class ItemDto {
     
     private Long id;
     private String itemName;

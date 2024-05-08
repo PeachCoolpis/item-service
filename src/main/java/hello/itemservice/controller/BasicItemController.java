@@ -1,6 +1,9 @@
 package hello.itemservice.controller;
 
 
+import hello.itemservice.dto.ItemDto;
+import hello.itemservice.dto.MemberDto;
+import hello.itemservice.dto.PageDto;
 import hello.itemservice.entity.*;
 import hello.itemservice.service.ItemService;
 import hello.itemservice.service.PaginationService;
@@ -9,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,9 +47,10 @@ public class BasicItemController {
     }
     
     @GetMapping("/{id}")
-    public String findItem(@PathVariable Long id, Model model) {
+    public String findItem(@PathVariable Long id, Model model , @AuthenticationPrincipal MemberDto memberDto) {
         Item item = service.findItem(id);
         model.addAttribute("item", item);
+        log.info("memberDto = {}", memberDto);
         return "basic/item";
     }
     
@@ -74,7 +79,7 @@ public class BasicItemController {
     }
     
     @PostMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, @ModelAttribute("itemDto") ItemDTO itemDto) {
+    public String edit(@PathVariable Long id, @ModelAttribute("itemDto") ItemDto itemDto) {
         Long itemId = service.itemUpdate(id, itemDto);
         //테스트 빌드 테스트
         return "redirect:" + String.format("/basic/items/%s", itemId);

@@ -1,6 +1,6 @@
 package hello.itemservice.service;
 
-import hello.itemservice.entity.PageDto;
+import hello.itemservice.dto.PageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
