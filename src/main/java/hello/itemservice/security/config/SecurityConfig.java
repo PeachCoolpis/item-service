@@ -51,7 +51,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(resourceLocation).permitAll()
-                        .requestMatchers("/","/signup","/login*").permitAll()
+                        .requestMatchers("/","/signup","/login*","/basic/items").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
