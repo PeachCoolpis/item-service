@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @RequestMapping("/basic/items")
 @Slf4j
-public class BasicItemController {
+public class ItemController {
     
     private final ItemService service;
     private final PaginationService paginationService;
@@ -35,7 +35,7 @@ public class BasicItemController {
     @GetMapping
     public String index(Model model,
                         @PageableDefault(page = 0, size = 2) Pageable page) {
-        Page<Item> items = service.findAll(page);
+        Page<ItemDto> items = service.findAll(page);
         PageDto pagedto = paginationService.createPageDto(items);
         model.addAttribute("items", items.getContent());
         model.addAttribute("pageIndices", IntStream.range(pagedto.getStartPage(), pagedto.getEndPage())

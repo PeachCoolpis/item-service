@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ItemService {
     
-    Page<Item> findAll(Pageable page);
+    Page<ItemDto> findAll(Pageable page);
     
     Item findItem(Long id);
     

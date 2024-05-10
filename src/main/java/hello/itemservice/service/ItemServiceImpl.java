@@ -1,11 +1,11 @@
 package hello.itemservice.service;
 
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import hello.itemservice.entity.Item;
 import hello.itemservice.dto.ItemDto;
-
+import hello.itemservice.entity.Item;
 import hello.itemservice.entity.QItem;
 import hello.itemservice.entity.SaveItem;
 import hello.itemservice.repository.ItemRepository;
@@ -28,12 +28,17 @@ public class ItemServiceImpl implements ItemService {
     
     @Override
     @Transactional(readOnly = true)
-    public Page<Item> findAll(Pageable page) {
+    public Page<ItemDto> findAll(Pageable page) {
         QItem item = QItem.item;
         
-        
-        List<Item> itemList = queryDsl
-                .select(item)
+        List<ItemDto> itemDtoList = queryDsl
+                .select(Projections.bean(ItemDto.class,
+                                item.id,
+                                item.itemName,
+                                item.itemPrice,
+                                item.quantity
+                        )
+                )
                 .from(item)
                 .offset(page.getOffset())
                 .limit(page.getPageSize())
@@ -42,8 +47,7 @@ public class ItemServiceImpl implements ItemService {
         JPAQuery<Long> count = queryDsl
                 .select(item.count())
                 .from(item);
-        
-        return PageableExecutionUtils.getPage(itemList, page, count::fetchOne);
+        return PageableExecutionUtils.getPage(itemDtoList, page, count::fetchOne);
     }
     
     @Override
