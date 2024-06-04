@@ -51,9 +51,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(resourceLocation).permitAll()
-                        .requestMatchers("/","/signup","/login*","/basic/items").permitAll()
+                    //    .requestMatchers("/","/signup","/login*","/basic/items").permitAll()
                         .anyRequest().permitAll()
                 )
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(login -> login
                         .loginPage("/login").permitAll()
                         .successHandler(authenticationSuccessHandler)
@@ -69,6 +70,7 @@ public class SecurityConfig {
                         .maxSessionsPreventsLogin(false)
                 )
                 
+        
                 ;
         
         return http.build();
