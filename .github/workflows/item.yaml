@@ -49,4 +49,30 @@ jobs:
         run: chmod +x gradlew
 
       - name: gradle 빌드
-        run: ./gradlew clean --stacktrace --info build
+        run: ./gradlew clean build
+
+      - name: SCP로 EC2로 빌드된 파일 전송
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: project.jar
+          target: /home/ubuntu/item-service/tobe
+
+      - name: SSH로 EC2로 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          envs: APPLICATION_PROPERTIES
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/item-service/target
+            mkdir /home/ubuntu/item-service/target
+            mv /home/ubuntu/item-service/tobe/project.jar /home/ubuntu/item-service/target
+            cd /home/ubuntu/item-service/target
+            sudo fuser -k -n tcp 8080 || true
+            nohup java -jar project.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/item-service/tobe
