@@ -81,9 +81,9 @@ jobs:
             sudo fuser -k -n udp 6100 || true
             cd /home/ubuntu/scouter/server
             sudo ./startup.sh
-            cd /home/ubuntu/scouter/agent.java
+            cd /home/ubuntu/scouter/agent.host
             sudo ./host.sh
             cd
             chmod +x run_back.sh
-            sudo ./run_back.sh 
+            sudo ./run_back.sh
             rm -rf /home/ubuntu/item-service/tobe
