@@ -75,7 +75,6 @@ jobs:
             rm -rf /home/ubuntu/item-service/target
             mkdir /home/ubuntu/item-service/target
             mv /home/ubuntu/item-service/tobe/project.jar /home/ubuntu/item-service/target
-            cd /home/ubuntu/item-service/target
             sudo fuser -k -n tcp 8080 || true
             sudo fuser -k -n tcp 6100 || true
             cd /home/ubuntu/scouter/server
