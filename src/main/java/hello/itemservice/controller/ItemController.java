@@ -25,7 +25,6 @@ import java.util.stream.IntStream;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/basic/items")
-@Slf4j
 public class ItemController {
     
     private final ItemService service;
@@ -50,7 +49,6 @@ public class ItemController {
     public String findItem(@PathVariable Long id, Model model , @AuthenticationPrincipal MemberDto memberDto) {
         Item item = service.findItem(id);
         model.addAttribute("item", item);
-        log.info("memberDto = {}", memberDto);
         return "basic/item";
     }
     
