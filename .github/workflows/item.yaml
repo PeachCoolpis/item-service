@@ -78,7 +78,6 @@ jobs:
             cd /home/ubuntu/item-service/target
             sudo fuser -k -n tcp 8080 || true
             sudo fuser -k -n tcp 6100 || true
-            sudo fuser -k -n udp 6100 || true
             cd /home/ubuntu/scouter/server
             sudo ./startup.sh
             cd /home/ubuntu/scouter/agent.host
