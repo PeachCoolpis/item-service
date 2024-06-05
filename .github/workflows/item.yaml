@@ -78,10 +78,10 @@ jobs:
             sudo fuser -k -n tcp 8080 || true
             sudo fuser -k -n tcp 6100 || true
             cd /home/ubuntu/scouter/server
-            sudo ./startup.sh
+            sudo ./startup.sh || true
             cd /home/ubuntu/scouter/agent.host
-            sudo ./host.sh
+            sudo ./host.sh || true
             cd
             chmod +x run_back.sh
-            sudo ./run_back.sh
+            sudo ./run_back.sh || true
             rm -rf /home/ubuntu/item-service/tobe
