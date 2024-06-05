@@ -77,5 +77,13 @@ jobs:
             mv /home/ubuntu/item-service/tobe/project.jar /home/ubuntu/item-service/target
             cd /home/ubuntu/item-service/target
             sudo fuser -k -n tcp 8080 || true
-            nohup java -jar project.jar > ./output.log 2>&1 &
+            sudo fuser -k -n tcp 6100 || true
+            sudo fuser -k -n udp 6100 || true
+            cd /home/ubuntu/scouter/server
+            sudo ./startup.sh
+            cd /home/ubuntu/scouter/agent.java
+            sudo ./host.sh
+            cd
+            chmod +x run_back.sh
+            sudo ./run_back.sh 
             rm -rf /home/ubuntu/item-service/tobe
