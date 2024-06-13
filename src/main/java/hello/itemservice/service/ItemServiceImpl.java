@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
         QItem item = QItem.item;
         
         List<ItemDto> itemDtoList = queryDsl
-                .select(Projections.bean(ItemDto.class,
+                .select(Projections.constructor(ItemDto.class,
                                 item.id,
                                 item.itemName,
                                 item.itemPrice,
