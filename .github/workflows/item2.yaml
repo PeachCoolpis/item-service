@@ -1,0 +1,83 @@
+name: item-service ci cd
+
+on:
+  push:
+    branches:
+      - main
+
+
+
+jobs:
+  item:
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.4.10
+        options: >-
+          --name mariadb
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        env:
+            MYSQL_ROOT_PASSWORD: ${{ secrets.ROOT_DB_PASSWORD }}
+            MYSQL_DATABASE: itemservice
+            MYSQL_USER: todo
+            MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 3306:3306
+    steps:
+      - name: GitHub clone
+        uses: actions/checkout@v4
+
+      - name: JDK 17 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: application properties 파일 만들기
+        run: echo "${{ secrets.APPLICATION_PROPERTIES2 }}" > src/main/resources/application.properties
+
+      - name: MariaDB 권한 설정
+        run: |
+          container_id=$(docker ps -qf "ancestor=mariadb:10.4.10")
+          docker exec $container_id mysql -uroot -p${{ secrets.ROOT_DB_PASSWORD }} -e "GRANT ALL PRIVILEGES ON itemservice.* TO 'todo'@'%' IDENTIFIED BY '${{ secrets.DB_PASSWORD }}'; FLUSH PRIVILEGES;"
+
+      - name: gradle 권한 추가
+        run: chmod +x gradlew
+
+      - name: gradle 빌드
+        env:
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        run: ./gradlew clean build --stacktrace --info
+
+      - name: 빌드된 파일 이름 변경하기
+        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
+
+      - name: SCP로 EC2로 빌드된 파일 전송
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST2 }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: project.jar
+          target: /home/ubuntu/item-service/tobe
+
+      - name: SSH로 EC2로 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST2 }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          envs: APPLICATION_PROPERTIES2
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/item-service/target
+            mkdir /home/ubuntu/item-service/target
+            mv /home/ubuntu/item-service/tobe/project.jar /home/ubuntu/item-service/target
+            cd /home/ubuntu/item-service/target
+            sudo fuser -k -n tcp 8080 || true
+            nohup java -jar project.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/item-service/tobe

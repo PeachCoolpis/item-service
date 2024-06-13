@@ -14,7 +14,7 @@ public class Member {
     
     
     @Id
-    @Comment("상품 ID")
+    @Comment("회원 ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
