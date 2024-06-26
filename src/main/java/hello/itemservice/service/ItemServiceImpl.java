@@ -51,6 +51,20 @@ public class ItemServiceImpl implements ItemService {
     }
     
     @Override
+    public List<ItemDto> findAll() {
+        QItem item = QItem.item;
+        return queryDsl
+                .select(Projections.constructor(ItemDto.class,
+                        item.id,
+                        item.itemName,
+                        item.itemPrice,
+                        item.quantity
+                        ))
+                .from(item)
+                .fetch();
+    }
+    
+    @Override
     @Transactional(readOnly = true)
     public Item findItem(Long id) {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("찾는 품목 없음"));

@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,6 +44,13 @@ public class ItemController {
         model.addAttribute("currentPage", pagedto.getCurrentPage());
         model.addAttribute("totalPages", pagedto.getTotalPages());
         return "basic/items";
+    }
+    
+    @GetMapping(value = "/pageAll")
+    public String index(Model model) {
+        List<ItemDto> item = service.findAll();
+        model.addAttribute("items", item);
+        return "basic/itemList";
     }
     
     @GetMapping("/{id}")
