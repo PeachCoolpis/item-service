@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.querydsl:querydsl-sql:5.0.0'
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
