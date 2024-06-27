@@ -44,10 +44,10 @@ public class ItemServiceImpl implements ItemService {
                 .limit(page.getPageSize())
                 .fetch();
         
-        JPAQuery<Long> count = queryDsl
+        JPAQuery<Long> pageCount = queryDsl
                 .select(item.count())
                 .from(item);
-        return PageableExecutionUtils.getPage(itemDtoList, page, count::fetchOne);
+        return PageableExecutionUtils.getPage(itemDtoList, page, pageCount::fetchOne);
     }
     
     @Override
@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
                         item.itemName,
                         item.itemPrice,
                         item.quantity
-                        ))
+                ))
                 .from(item)
                 .fetch();
     }

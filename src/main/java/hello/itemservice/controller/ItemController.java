@@ -31,7 +31,6 @@ public class ItemController {
     private final PaginationService paginationService;
     
     
-
     @GetMapping
     public String index(Model model,
                         @PageableDefault(page = 0, size = 10) Pageable page) {
@@ -48,16 +47,23 @@ public class ItemController {
     
     @GetMapping(value = "/pageAll")
     public String index(Model model) {
-        List<ItemDto> item = service.findAll();
-        model.addAttribute("items", item);
+        List<ItemDto> items = service.findAll();
+        model.addAttribute("items", items);
         return "basic/itemList";
     }
     
     @GetMapping("/{id}")
-    public String findItem(@PathVariable Long id, Model model , @AuthenticationPrincipal MemberDto memberDto) {
+    public String findItem(@PathVariable Long id, Model model) {
         Item item = service.findItem(id);
         model.addAttribute("item", item);
         return "basic/item";
+    }
+    
+    @GetMapping("/pageAll/{id}")
+    public String findItemTwo(@PathVariable Long id, Model model) {
+        Item item = service.findItem(id);
+        model.addAttribute("item", item);
+        return "basic/itemTwo";
     }
     
     @GetMapping("/add")

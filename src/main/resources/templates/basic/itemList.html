@@ -31,8 +31,8 @@
             </thead>
             <tbody th:if="${#lists.isEmpty(items)} == false">
             <tr th:each=" item : ${ items}">
-                <td><a th:href="@{/basic/items/{id}(id=${item.id})}" th:text="${item.id}" href="item.html">1</a></td>
-                <td><a th:href="@{|/basic/items/${item.id}|}" href="item.html" th:text="${item.itemName}"></a></td>
+                <td><a th:href="@{/basic/items/pageAll/{id}(id=${item.id})}" th:text="${item.id}" href="item.html">1</a></td>
+                <td><a th:href="@{|/basic/items/pageAll/${item.id}|}" href="item.html" th:text="${item.itemName}"></a></td>
                 <td th:text="${item.itemPrice}">10000</td>
                 <td th:text="${item.quantity}">10</td>
             </tr>
